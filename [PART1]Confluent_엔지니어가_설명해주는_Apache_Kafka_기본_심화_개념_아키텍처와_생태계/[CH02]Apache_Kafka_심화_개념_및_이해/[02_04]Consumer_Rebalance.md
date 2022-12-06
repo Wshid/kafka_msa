@@ -98,7 +98,7 @@
 - `poll()`은 `heartbeats`와 상관없이 주기적으로 호출되어야 함
   - `max.poll.interval.ms`(default: 5m)
 
-### 과도한 Rebalancing을 피하는 방법
+### 과도한 Rebalancing을 피하는 방법 
 - 성능 최적화에 필수
 
 #### Consumer Group 멤버 고정
