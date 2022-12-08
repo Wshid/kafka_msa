@@ -1,4 +1,4 @@
-m## [02_05] Partition Assignment Strategy
+## [02_05] Partition Assignment Strategy
 
 ### Partition Assignment Strategy
 - Range, RoundRobin, Sticky, CooperativeSticky, Custom
