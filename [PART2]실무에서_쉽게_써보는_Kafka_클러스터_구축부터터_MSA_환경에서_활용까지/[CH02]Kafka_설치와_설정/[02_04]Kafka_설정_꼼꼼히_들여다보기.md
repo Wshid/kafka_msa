@@ -1,0 +1,59 @@
+## [02_04] Kafka 설정 꼼꼼히 들여다보기
+- https://github.com/apache/kafka/blob/trunk/config/server.properties
+
+### 옵션별 설정
+- broker.id
+  - 브로커별 고유값
+- listeners
+  - broker에서 참조하는 endpoint
+- advertised.listeners
+  - producer/consumer가 참조하는 endpoint
+  - default: `listeners`의 설정
+  - c.f. `listeners`와 `adversited.listener`가 별개 설정인 이유?
+    - Internal, Enternal Traffic을 구분짓기 위함
+    - https://cwiki.apache.org/confluence/display/KAFKA/KIP-103%3A+Separation+of+Internal+and+External+traffic
+    - 복제, 보안, broker 직접 접근 등의 사례
+- num.network.threads
+  - 요청을 받거나 응답을 내보내는 thread 수
+- num.io.threads
+  - 요청을 처리할때 disk io를 포함하는 threads
+- socker.send.buffer.bytes, socker.request.max.bytes
+  - send buffer size, request.max size를 byte단위로 설정 가능
+- log.dirs
+  - broker가 데이터를 저장하는 directory
+- num.partitions
+  - 파티션 수 기본값
+- flush 관련 설정
+  - Durability: fsync() 되기전 메모리에 들고 있는 데이터, replication을 사용하지 않는다면 유실 가능성 존재
+  - Latency: flush 타이밍에 누적된 메세지가 많을 경우
+  - Throughput: flush interval을 짧게 가져가게 되면, 성능 문제가 발생할 수 있음
+- log.flush.interval.messages
+  - 데이터를 disk에 쓰기 전에, 메세지를 얼마나 가지고 있을지
+  - default: 10000
+- log.flush.interval.ms
+  - 얼마의 시간동안 flush를 할지
+  - default: 1000
+- log.retention.check.interval.ms
+  - 삭제할 수 있는지 확인하기 위해 log segment를 확인하는 간격
+  - default: 300000
+
+### 추가적인 설정
+- auto.create.topics.enable
+  - topic의 auto creation 기능을 켤지 여부
+  - default: true
+- compression.type
+  - producer가 압축 알고리즘을 지정하면, broker는 메세지를 그대로 저장
+  - consumer가 pull시에도 압축한 메세지를 가져감
+  - gzip, snappy, lz4, zstd
+  - 메세지를 압축하기 때문에 **bandwidth**에 이점 존재
+- delete.topic.enable
+  - topic 삭제를 활성화 할지
+  - false 설정시, 삭제 명령이 먹지 않음
+  - default: true
+- message.max.bytes
+  - broker가 허용할 메세지의 최대 크기
+  - 만약 compression이 켜져있다면, compression된 메세지의 크기를 기준으로 검증
+- replica.lag.time.max.ms
+  - follower가 leader에게 일정 시간동한 fetch-request를 보내지 않는다면,
+  - leader는 isr에서 follower를 제거
+  - default: 30000
